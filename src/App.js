@@ -1,5 +1,5 @@
 import "./App.css";
-import ListaComics from "./components/listaQuadrinhos/listaComics";
+import ListaComics from "./components/listaComics/listaComics";
 import Header from "./components/header/header";
 
 export default function App() {

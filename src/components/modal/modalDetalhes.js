@@ -4,52 +4,49 @@ import Button from "react-bootstrap/Button";
 import Api from "../../services/api";
 import CryptoJS from "crypto-js";
 
-export default function ModalDetalhes(props) {
-  const [detalhesComic, setDetalhesComic] = useState();
-
-  const ts = Math.floor(Date.now() / 1000);
-  const apikey = "d06c2cbee8ef14e74aa4561e1f135090";
-  const hash = CryptoJS.MD5(
-    ts +
-      "0da6efb140fbb420811af22f041b8c98681eecbad06c2cbee8ef14e74aa4561e1f135090"
-  ).toString();
+export default function ModalDetalhes({ showModal, closeModal, id }) {
+  const [detail, setDetail] = useState([]);
+  const [img, setImg] = useState("");
 
   useEffect(() => {
-    Api.get(`comics/${props.id}?ts=${ts}&apikey=${apikey}&hash=${hash}`)
+    const ts = Math.floor(Date.now() / 1000);
+    const apikey = "d06c2cbee8ef14e74aa4561e1f135090";
+    const hash = CryptoJS.MD5(
+      ts +
+        "0da6efb140fbb420811af22f041b8c98681eecbad06c2cbee8ef14e74aa4561e1f135090"
+    ).toString();
+    Api.get(`comics/${id}?ts=${ts}&apikey=${apikey}&hash=${hash}`)
       .then((response) => {
-        setDetalhesComic(response.data.data.results);
-        console.log(response.data.data.results)
+        setDetail(response.data.data.results[0]);
+        setImg(
+          response.data.data.results[0].thumbnail.path +
+            "." +
+            response.data.data.results[0].thumbnail.extension
+        );
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
-
+  }, [id]);
   return (
     <Modal
-      {...props}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      show={showModal}
+      onHide={closeModal}
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {detalhesComic[0].title}
+          {detail.title}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ textAlign: "center" }}>
-        <img
-          src={
-            detalhesComic[0].thumbnail.path +
-            "." +
-            detalhesComic[0].thumbnail.extension
-          }
-          style={{ maxWidth: "500px", margin: "1em" }}
-        />
-        <p>{detalhesComic[0].description}</p>
+        <img src={img} style={{ width: "350px", marginBottom: "1em" }} />
+        <p>{detail.description}</p>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
+        <Button onClick={closeModal}>Fechar</Button>
       </Modal.Footer>
     </Modal>
   );
