@@ -19,7 +19,6 @@ export default function ListaComics() {
     Api.get(`comics`)
       .then((response) => {
         setComics(response.data.data.results);
-        console.log(response.data.data.results);
       })
       .catch((err) => {
         console.error(err);
@@ -36,10 +35,10 @@ export default function ListaComics() {
                 <InputGroup.Text>Search</InputGroup.Text>
               </InputGroup.Prepend>
               <FormControl
-              //Caixa de busca, utiliza a expressão digitada para buscar quadrinhos
+                //Caixa de busca, utiliza a expressão digitada para buscar quadrinhos
                 id="buscaComics"
                 onChange={(event) => {
-                  Api.get(`comics`, {
+                  Api.get('comics', {
                     params: {
                       titleStartsWith: event.target.value,
                     },

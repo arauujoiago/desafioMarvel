@@ -10,7 +10,11 @@ export default function ModalDetalhes({ showModal, closeModal, id }) {
 
   // Sempre que o botão "Details" for clicado, o Hook carrega as informações do quadrinho utilizando o seu ID.
   useEffect(() => {
-    Api.get(`comics/${id}`)
+    Api.get('comics', {
+      params: {
+        id: id,
+      },
+    })
       .then((response) => {
         setDetail(response.data.data.results[0]);
         setImg(
@@ -24,6 +28,7 @@ export default function ModalDetalhes({ showModal, closeModal, id }) {
         console.error(err);
       });
   }, [id]);
+
   return (
     <Modal
       size="lg"
