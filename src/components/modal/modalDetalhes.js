@@ -2,20 +2,15 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Api from "../../services/api";
-import CryptoJS from "crypto-js";
 
 export default function ModalDetalhes({ showModal, closeModal, id }) {
   const [detail, setDetail] = useState([]);
   const [img, setImg] = useState("");
+  const [price, setPrice] = useState("");
 
+  // Sempre que o botão "Details" for clicado, o Hook carrega as informações do quadrinho utilizando o seu ID.
   useEffect(() => {
-    const ts = Math.floor(Date.now() / 1000);
-    const apikey = "d06c2cbee8ef14e74aa4561e1f135090";
-    const hash = CryptoJS.MD5(
-      ts +
-        "0da6efb140fbb420811af22f041b8c98681eecbad06c2cbee8ef14e74aa4561e1f135090"
-    ).toString();
-    Api.get(`comics/${id}?ts=${ts}&apikey=${apikey}&hash=${hash}`)
+    Api.get(`comics/${id}`)
       .then((response) => {
         setDetail(response.data.data.results[0]);
         setImg(
@@ -23,6 +18,7 @@ export default function ModalDetalhes({ showModal, closeModal, id }) {
             "." +
             response.data.data.results[0].thumbnail.extension
         );
+        setPrice(response.data.data.results[0].prices[0].price);
       })
       .catch((err) => {
         console.error(err);
@@ -36,14 +32,25 @@ export default function ModalDetalhes({ showModal, closeModal, id }) {
       show={showModal}
       onHide={closeModal}
     >
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title id="contained-modal-title-vcenter">
           {detail.title}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ textAlign: "center" }}>
-        <img src={img} style={{ width: "350px", marginBottom: "1em" }} />
+        <img
+          src={img}
+          alt="thumbnail"
+          style={{ width: "350px", marginBottom: "1em" }}
+        />
+        <h4>Description</h4>
         <p>{detail.description}</p>
+        <p>
+          <b>Price:</b> ${price}
+          <br />
+          <b>Page count:</b> {detail.pageCount}
+          <br />
+        </p>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={closeModal}>Fechar</Button>
