@@ -1,5 +1,5 @@
 <h1 align="center">
-     ♻️ <a href="#" alt="site do ecoleta"> Desafio Marvel API </a>
+    <a href="#" alt="site do ecoleta"> Desafio Marvel API </a>
 </h1>
 
 <h4 align="center">
